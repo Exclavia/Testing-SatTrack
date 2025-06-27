@@ -1,5 +1,8 @@
 import os
 
+def import_test ():
+    print("import_sat.py imported succesfully.")
+
 # Imports satinfo.txt and grabs additionally added satellite information.
 def import_satellites():
     """Imports Satellite information via the satinfo.txt in the /data directory

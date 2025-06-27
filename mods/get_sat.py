@@ -6,6 +6,9 @@ from pytz import timezone as py_tz
 from mods.import_sat import import_satellites
 from mods.get_keps import get_keps
 
+def import_test ():
+    print("get_sat.py imported succesfully.")
+
 # Function loads local keps file, reads it, calculates, returns in list/dict
 def get_sat(norad_id:int, usr_lat:float, usr_lon:float, usr_minalt:float):
     """get_sat(norad_id: int -> NORAD ID,

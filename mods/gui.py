@@ -5,6 +5,8 @@ from ttkbootstrap import Style
 from mods.get_sat import get_sat
 from mods.import_sat import import_satellites
 
+def import_test ():
+    print("gui.py imported succesfully.")
 
 def start_gui():
     """Main GUI function"""
