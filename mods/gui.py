@@ -2,16 +2,21 @@ import tkinter as tk
 from tkinter import ttk, messagebox, BOTH, PhotoImage
 from tkinter.font import Font
 from ttkbootstrap import Style
-from mods.get_sat import get_sat
-from mods.import_sat import import_satellites
+try:
+    from get_sat import get_sat
+    from data_info import SatelliteData
+except:
+    from mods.get_sat import get_sat
+    from mods.data_info import SatelliteData
 
 def import_test ():
     print("gui.py imported succesfully.")
 
-def start_gui():
+def start_gui(d_path:str):
     """Main GUI function"""
     # Grabbing satellite info from data/satinfo.txt
-    sat_import = import_satellites()
+    sd = SatelliteData('amateur', d_path)
+    sat_import = sd.add_info
     sat_options = []
     # Adds to list for combo box options
     for nfo in sat_import:
@@ -25,7 +30,7 @@ def start_gui():
             sat_sep = selected_item.replace(" ", "").split(":")
             norad = int(sat_sep[1])
             name = sat_sep[0]
-            sat_data = get_sat(norad, in_lat, in_lon, min_elev)
+            sat_data = get_sat(norad, in_lat, in_lon, min_elev, d_path)
             combo_box.set(selected_item)
             # Setting variables from getSat
             r_el, m_el, s_el = sat_data[1].get("Elev"), sat_data[2].get("Elev"), sat_data[3].get("Elev")

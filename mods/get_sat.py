@@ -3,20 +3,23 @@ from time import time
 from datetime import datetime as dt
 from skyfield.api import EarthSatellite, wgs84, load
 from pytz import timezone as py_tz
-from mods.import_sat import import_satellites
-from mods.get_keps import get_keps
+try:
+    from data_info import SatelliteData
+except:
+    from mods.data_info import SatelliteData
 
 def import_test ():
     print("get_sat.py imported succesfully.")
 
 # Function loads local keps file, reads it, calculates, returns in list/dict
-def get_sat(norad_id:int, usr_lat:float, usr_lon:float, usr_minalt:float):
+def get_sat(norad_id:int, usr_lat:float, usr_lon:float, usr_minalt:float, data_path:str):
+    sd = SatelliteData('amateur', data_path)
     """get_sat(norad_id: int -> NORAD ID,
                usr_lat: float -> Latitude,
                usr_lon: float -> Longitude,
                usr_minalt: float -> Minimum elevation/altitude"""
-    sat_import = import_satellites()
-    file_path = get_keps(sat_group='amateur', file_format='csv')
+    sat_import = sd.add_info
+    file_path = sd.csv_path
     with load.open(file_path, mode='r') as f:
         data = list(DictReader(f))
     # Setting Timescale/Datetime/Timezone

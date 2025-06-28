@@ -1,7 +1,8 @@
-from mods import get_keps, get_sat, import_sat, gui
+from mods import gui, get_sat, data_info, path_to
 
-get_keps.import_test()
-get_sat.import_test()
-import_sat.import_test()
+# -----‐ For new modules add their imports to test.
+
 gui.import_test()
-# -----‐ For new modules add their imports to test. 
+get_sat.import_test()
+path_to.import_test()
+data_info.import_test()
