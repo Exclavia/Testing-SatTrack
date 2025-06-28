@@ -1,4 +1,4 @@
-tk
-ttkbootstrap
-pytz
-skyfield
+skyfield==1.53
+pytz==2025.2
+tk==0.1.0
+ttkbootstrap==1.13.11

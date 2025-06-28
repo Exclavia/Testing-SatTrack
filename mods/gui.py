@@ -3,16 +3,18 @@ from tkinter import ttk, messagebox, BOTH, PhotoImage
 from tkinter.font import Font
 from ttkbootstrap import Style
 try:
-    from get_sat import get_sat
+    from get_sat import GetSat
     from data_info import SatelliteData
+    from display import disp_data
 except:
-    from mods.get_sat import get_sat
+    from mods.get_sat import GetSat
     from mods.data_info import SatelliteData
+    from mods.display import disp_data
 
 def import_test ():
     print("gui.py imported succesfully.")
 
-def start_gui(d_path:str):
+def start_gui(d_path:str, darkmode=True):
     """Main GUI function"""
     # Grabbing satellite info from data/satinfo.txt
     sd = SatelliteData('amateur', d_path)
@@ -21,7 +23,7 @@ def start_gui(d_path:str):
     # Adds to list for combo box options
     for nfo in sat_import:
         sat_options.append(f"{nfo.get('Name')}: {nfo.get('NORAD')}")
-
+    
 
     def show_selected_item(in_lat:float, in_lon:float, min_elev:float):
         """Calls getSat function and displays returned data"""
@@ -30,23 +32,17 @@ def start_gui(d_path:str):
             sat_sep = selected_item.replace(" ", "").split(":")
             norad = int(sat_sep[1])
             name = sat_sep[0]
-            sat_data = get_sat(norad, in_lat, in_lon, min_elev, d_path)
+            sat_data = GetSat(norad, in_lat, in_lon, min_elev, d_path).data
             combo_box.set(selected_item)
             # Setting variables from getSat
-            r_el, m_el, s_el = sat_data[1].get("Elev"), sat_data[2].get("Elev"), sat_data[3].get("Elev")
-            r_dx, c_dx, s_dx = sat_data[1].get("Distance"), sat_data[2].get("Distance"), sat_data[3].get("Distance")
-            r_dt, c_dt, s_dt = sat_data[1].get("When"), sat_data[2].get("When"), sat_data[3].get("When")
-            up, down, mode = sat_data[4].get("Uplink"), sat_data[4].get("Downlink"), sat_data[4].get("Mode")
+            risd = sat_data[1].get("Elev"), sat_data[1].get("Distance"), sat_data[1].get("When")
+            clmd = sat_data[2].get("Elev"), sat_data[2].get("Distance"), sat_data[2].get("When")
+            setd =  sat_data[3].get("Elev"), sat_data[3].get("Distance"), sat_data[3].get("When")
+            info = sat_data[4].get("Uplink"), sat_data[4].get("Downlink"), sat_data[4].get("Mode")
             # Displayed Info ================
-            text_area.insert(tk.INSERT, f"  Name: {name}")
-            text_area.insert(tk.INSERT, f"\n  NORAD: {norad}\n")
-            text_area.insert(tk.INSERT, f"  Lat: {in_lat} | Lon: {in_lon}\n")
-            text_area.insert(tk.INSERT, f"  Up: {up}  |  Down: {down}\n")
-            text_area.insert(tk.INSERT, f"  Mode: {mode}\n")
-            text_area.insert(tk.INSERT, "____________ Next Pass ___________" + "\n\n")
-            text_area.insert(tk.INSERT, f" ● Rise\n  | Elevation: {r_el}\n  | Distance: {r_dx}\n  | When: {r_dt}\n\n")
-            text_area.insert(tk.INSERT, f" ● Max\n  | Elevation: {m_el}\n  | Distance: {c_dx}\n  | When: {c_dt}\n\n")
-            text_area.insert(tk.INSERT, f" ● Set\n  | Elevation: {s_el}\n  | Distance: {s_dx}\n  | When: {s_dt}")
+            ds_list = disp_data(name, norad, in_lat, in_lon, info, risd, clmd, setd)
+            for line in ds_list:
+                text_area.insert(tk.INSERT, line)
             text_area.config(state=tk.DISABLED)
 
 
@@ -76,7 +72,7 @@ def start_gui(d_path:str):
     root.geometry("360x650")
     font = Font(family="Arial", size=20)
     root.option_add("*TCombobox*Listbox*Font", font)
-    Style(theme='darkly') # Enables dark theme
+    if darkmode: Style(theme='darkly') # Enables dark theme
 
     # === LAT/LONG/MIN.ELEV ENTRY FIELDS ===
     entry_frame = ttk.Frame(root)
@@ -108,6 +104,6 @@ def start_gui(d_path:str):
     text_area.pack(padx=2, pady=10)
     submitbutton = tk.Button(root, text="Lookup Satellite", command=button_click, font=("Arial", 12))
     submitbutton.pack(padx=8, pady=5, fill=BOTH)
-
+    
     # Run the Tkinter event loop
     root.mainloop()
