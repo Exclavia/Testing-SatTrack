@@ -1,6 +1,6 @@
 import os
 
-from skyfield.api import load
+from .skyfield.api import load
 
 
 def import_test ():
