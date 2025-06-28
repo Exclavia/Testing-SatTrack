@@ -9,6 +9,7 @@ def import_test ():
 
 
 class SatelliteData:
+    """ Takes Celestrak satellite group and data directory path + Optional force download and max amount of days before downloading again."""
     def __init__ (self, sat_group:str, data_path:str, force_dl=False, max_days=7.0):
         self.data_path = data_path
         self.csv_path = self.getkeps(sat_group, force_dl, max_days)
@@ -17,19 +18,11 @@ class SatelliteData:
 
     # Imports satinfo.txt and grabs additionally added satellite information.
     def __addinfo__(self, d_dir, csv_path):
-        """Imports Satellite information via the satinfo.txt in the /data directory
-    Returns->list [ {
-        "Name" : Satellite Name,
-        "NORAD" : NORAD ID,
-        "Uplink" : Uplink Frequency,
-        "Downlink" : Downlink Frequency,
-        "Mode" : Transmitter Mode  } ], ...
-        """
         sat_info = []
-        with open(path.join(d_dir,'satinfo.txt'), "rt", encoding="utf-8") as info:
+        with open(path.join(d_dir,'satinfo.txt'), 'rt', encoding='utf-8') as info:
             info_list = info.read().split("\n")
             col = "NORAD_CAT_ID"
-            with open(csv_path, mode='r', newline='') as f:
+            with open(csv_path, mode='r', newline='', encoding='utf-8') as f:
                 csv_data = DictReader(f)
                 for row in csv_data:
                     for nfo in info_list:
@@ -60,8 +53,6 @@ class SatelliteData:
             if not load.exists(file_path) or load.days_old(file_path) >= max_days or force_dl:
                 if force_dl: print("Downloading...")
                 load.download(url, filename=file_path)
-            with load.open(file_path, mode='r') as f:
-                kep_data = list(DictReader(f))
             return file_path
 
         print(f"{self.data_path} does not exist.")

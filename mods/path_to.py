@@ -6,7 +6,7 @@ def import_test ():
 
 
 def data_dir():
-    if path.exists("..\\data"): data_dir = "..\\data"
-    elif path.exists(".\\data"): data_dir = ".\\data"
+    if path.exists("..\\data"): data = "..\\data"
+    elif path.exists(".\\data"): data = ".\\data"
     else: raise NotADirectoryError("No data directory found")
-    return data_dir
+    return data

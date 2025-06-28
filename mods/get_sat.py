@@ -6,28 +6,28 @@ from skyfield.api import EarthSatellite as es
 from pytz import timezone as py_tz
 try:
     from data_info import SatelliteData
-except:
+except ImportError:
     from mods.data_info import SatelliteData
 
 def import_test ():
     print("get_sat.py imported succesfully.")
 class GetSat:
+    """Takes NORAD Number, Latitude, Longitude, Minimum elevation and data directory path, returns Satellite descripton info and rise, culmination and set data."""
     def __init__(self, norad:int, latitude:float, longitude:float, min_elevation:float, data_path:str):
         self.data = self.__getsat__(norad, latitude, longitude, min_elevation, data_path)
-        
+
     def _24(self, epoch):
         return epoch + 86400.0
-    
+
     def dt2(self, ts:Timescale, dtime):
         return ts.from_datetime(dtime)
-    
+
     def ts2(self, times, tzone):
         return dt.fromtimestamp(times, tz=tzone)
-    
+
     # Function loads local keps file, reads it, calculates, returns in list/dict
     def __getsat__(self, norad:int, lat:float, lon:float, minel:float, datapath:str):
         sd = SatelliteData('amateur', datapath)
-        """get_sat(norad: int->NORAD, lat: float->Latitude, lon: float->Longitude, minel: float->Min. elevation"""
         # Using parsed kep-data to make a few lists to allow easier access to the information.
         sat_data = []
         sat_info = []

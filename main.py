@@ -20,3 +20,4 @@ if __name__ == "__main__":
             print("That's not an option: --help for more information.")
     else:
         start_gui(data_dir())
+        

@@ -6,7 +6,7 @@ try:
     from get_sat import GetSat
     from data_info import SatelliteData
     from display import disp_data
-except:
+except ImportError:
     from mods.get_sat import GetSat
     from mods.data_info import SatelliteData
     from mods.display import disp_data
@@ -23,7 +23,7 @@ def start_gui(d_path:str, darkmode=True):
     # Adds to list for combo box options
     for nfo in sat_import:
         sat_options.append(f"{nfo.get('Name')}: {nfo.get('NORAD')}")
-    
+
 
     def show_selected_item(in_lat:float, in_lon:float, min_elev:float):
         """Calls getSat function and displays returned data"""
@@ -104,6 +104,6 @@ def start_gui(d_path:str, darkmode=True):
     text_area.pack(padx=2, pady=10)
     submitbutton = tk.Button(root, text="Lookup Satellite", command=button_click, font=("Arial", 12))
     submitbutton.pack(padx=8, pady=5, fill=BOTH)
-    
+
     # Run the Tkinter event loop
     root.mainloop()
