@@ -1,9 +1,9 @@
 import tkinter as tk
 from tkinter import ttk, messagebox, BOTH, PhotoImage
 from tkinter.font import Font
-from ttkbootstrap import Style
-from mods.get_sat import get_sat
-from mods.import_sat import import_satellites
+#from ttkbootstrap import Style
+from get_sat import get_sat
+from sat_import import get_info
 
 def import_test ():
     print("gui.py imported succesfully.")
@@ -11,7 +11,7 @@ def import_test ():
 def start_gui():
     """Main GUI function"""
     # Grabbing satellite info from data/satinfo.txt
-    sat_import = import_satellites()
+    sat_import = get_info()
     sat_options = []
     # Adds to list for combo box options
     for nfo in sat_import:
@@ -71,7 +71,7 @@ def start_gui():
     root.geometry("360x650")
     font = Font(family="Arial", size=20)
     root.option_add("*TCombobox*Listbox*Font", font)
-    Style(theme='darkly') # Enables dark theme
+    #Style(theme='darkly') # Enables dark theme
 
     # === LAT/LONG/MIN.ELEV ENTRY FIELDS ===
     entry_frame = ttk.Frame(root)
