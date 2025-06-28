@@ -3,7 +3,7 @@ from time import time
 from datetime import datetime as dt
 from skyfield.api import EarthSatellite, wgs84, load
 from pytz import timezone as py_tz
-from sat_import import get_keps, get_info
+from .sat_import import get_keps, get_info
 
 def import_test ():
     print("get_sat.py imported succesfully.")

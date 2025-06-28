@@ -2,8 +2,8 @@ import tkinter as tk
 from tkinter import ttk, messagebox, BOTH, PhotoImage
 from tkinter.font import Font
 #from ttkbootstrap import Style
-from get_sat import get_sat
-from sat_import import get_info
+from .get_sat import get_sat
+from .sat_import import get_info
 
 def import_test ():
     print("gui.py imported succesfully.")
