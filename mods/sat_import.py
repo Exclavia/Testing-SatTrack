@@ -2,6 +2,10 @@ import os
 
 from skyfield.api import load
 
+
+def import_test ():
+    print("sat_import.py imported succesfully.")
+
 # Downloads Keplarian(Keps) Elements from Celestrak, only if file hasn't been download yet
 # + only if previous file is more than max_days old (default 7.0)
 def get_keps(sat_group:str, file_format:str, force_dl=False, max_days=7.0):
