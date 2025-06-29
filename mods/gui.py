@@ -14,10 +14,10 @@ except ImportError:
 def import_test ():
     print("gui.py imported succesfully.")
 
-def start_gui(d_path:str, darkmode=True):
+def start_gui(darkmode=True):
     """Main GUI function"""
     # Grabbing satellite info from data/satinfo.txt
-    sd = SatelliteData('amateur', d_path)
+    sd = SatelliteData('amateur')
     sat_import = sd.add_info
     sat_options = []
     # Adds to list for combo box options
@@ -31,16 +31,16 @@ def start_gui(d_path:str, darkmode=True):
         if selected_item:
             sat_sep = selected_item.replace(" ", "").split(":")
             norad = int(sat_sep[1])
-            name = sat_sep[0]
-            sat_data = GetSat(norad, in_lat, in_lon, min_elev, d_path).data
+            sat_data = GetSat(norad, in_lat, in_lon, min_elev).data
             combo_box.set(selected_item)
             # Setting variables from getSat
+            nnll = sat_data[0].get("Name"), sat_data[0].get("NORAD"), in_lat, in_lon
             risd = sat_data[1].get("Elev"), sat_data[1].get("Distance"), sat_data[1].get("When")
             clmd = sat_data[2].get("Elev"), sat_data[2].get("Distance"), sat_data[2].get("When")
             setd =  sat_data[3].get("Elev"), sat_data[3].get("Distance"), sat_data[3].get("When")
             info = sat_data[4].get("Uplink"), sat_data[4].get("Downlink"), sat_data[4].get("Mode")
             # Displayed Info ================
-            ds_list = disp_data(name, norad, in_lat, in_lon, info, risd, clmd, setd)
+            ds_list = disp_data(nnll, info, risd, clmd, setd)
             for line in ds_list:
                 text_area.insert(tk.INSERT, line)
             text_area.config(state=tk.DISABLED)

@@ -1,9 +1,9 @@
 
-def disp_data(name:str, norad:int, lat:float, lon:float, info, rise, culm, sets):
+def disp_data(nnll, info, rise, culm, sets):
     """Returns displayed text information as list"""
-    display_list = [f"  Name: {name}",
-                    f"\n  NORAD: {norad}\n",
-                    f"  Lat: {lat} | Lon: {lon}\n",
+    display_list = [f"  Name: {nnll[0]}",
+                    f"\n  NORAD: {nnll[1]}\n",
+                    f"  Lat: {nnll[2]} | Lon: {nnll[3]}\n",
                     f"  Up: {info[0]}  |  Down: {info[1]}\n",
                     f"  Mode: {info[2]}\n",
                     "____________ Next Pass ___________" + "\n\n",

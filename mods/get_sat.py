@@ -6,15 +6,23 @@ from skyfield.api import EarthSatellite as es
 from pytz import timezone as py_tz
 try:
     from data_info import SatelliteData
+    from path_to import data_dir
 except ImportError:
     from mods.data_info import SatelliteData
+    from mods.path_to import data_dir
 
+_path = data_dir()
 def import_test ():
     print("get_sat.py imported succesfully.")
 class GetSat:
     """Takes NORAD Number, Latitude, Longitude, Minimum elevation and data directory path, returns Satellite descripton info and rise, culmination and set data."""
-    def __init__(self, norad:int, latitude:float, longitude:float, min_elevation:float, data_path:str):
-        self.data = self.__getsat__(norad, latitude, longitude, min_elevation, data_path)
+    def __init__(self, norad:int, latitude:float, longitude:float, min_elevation:float):
+        self.path = _path
+        self.norad = norad
+        self.lat = latitude
+        self.lon = longitude
+        self.min = min_elevation
+        self.data = self.__getsat__()
 
     def _24(self, epoch):
         return epoch + 86400.0
@@ -26,10 +34,9 @@ class GetSat:
         return dt.fromtimestamp(times, tz=tzone)
 
     # Function loads local keps file, reads it, calculates, returns in list/dict
-    def __getsat__(self, norad:int, lat:float, lon:float, minel:float, datapath:str):
-        sd = SatelliteData('amateur', datapath)
+    def __getsat__(self):
+        sd = SatelliteData('amateur')
         # Using parsed kep-data to make a few lists to allow easier access to the information.
-        sat_data = []
         sat_info = []
         sat_import = sd.add_info
         file_path = sd.csv_path
@@ -43,18 +50,13 @@ class GetSat:
         # Parsing Keps and returning easily callable data.
         earth_sats = [es.from_omm(ts, fields) for fields in data]
         by_number = {sat.model.satnum: sat for sat in earth_sats}
-        main_sat = by_number[norad]
-        pos = wgs84.latlon(lat, lon)
+        main_sat = by_number[self.norad]
+        pos = wgs84.latlon(self.lat, self.lon)
         for sat in earth_sats:
-            if sat.model.satnum == norad:
-                sat_info.append(sat.name)
-            sat_dict = {
-                "Name": sat.name,
-                "NORAD": sat.model.satnum
-                }
-            sat_data.append(sat_dict)
+            if sat.model.satnum == self.norad:
+                sat_info.append({"Name": sat.name, "NORAD": sat.model.satnum})
         # Finding events using the two set timescales (Current time + 24hours)
-        t, sat_events = main_sat.find_events(pos, t0, t1, altitude_degrees=minel)
+        t, sat_events = main_sat.find_events(pos, t0, t1, altitude_degrees=self.min)
         event_names = 'Rises', 'Culminates', 'Sets'
         pass_limit = 1
         format_str = "%b %d, %Y at %I:%M:%S %p"
@@ -79,7 +81,7 @@ class GetSat:
         # Scans through satinfo.txt, finds inputted NORAD, returns additional information
         # Uplink frequency, Downlink frequency, Transmitter mode.
         for more in sat_import:
-            if int(more.get("NORAD")) != norad: continue
+            if int(more.get("NORAD")) != self.norad: continue
             more_dict = {
                 "Uplink": more.get("Uplink"),
                 "Downlink": more.get("Downlink"),
