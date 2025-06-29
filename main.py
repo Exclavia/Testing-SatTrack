@@ -1,10 +1,10 @@
 import sys
 try:
     from mods.data_info import SatelliteData
-    from mods.gui import start_gui
+    from mods.gui import start_gui, test_start
 except ImportError:
     from data_info import SatelliteData
-    from gui import start_gui
+    from gui import start_gui, test_start
 
 
 if __name__ == "__main__":
@@ -18,6 +18,8 @@ if __name__ == "__main__":
             SatelliteData('amateur', force_dl=True)
         elif sys.argv[1] == '--light':
             start_gui(darkmode=False)
+        elif sys.argv[1] == '--test':
+            test_start()
         else:
             print("That's not an option: --help for more information.")
     else:

@@ -1,3 +1,5 @@
+from time import sleep
+
 import tkinter as tk
 from tkinter import ttk, messagebox, BOTH, PhotoImage
 from tkinter.font import Font
@@ -11,9 +13,93 @@ except ImportError:
     from mods.data_info import SatelliteData
     from mods.display import disp_data
 
-def import_test ():
-    print("gui.py imported succesfully.")
-
+def test_start ():
+    ts = 0.5
+    print("\n  Starting test program...")
+    sleep(ts)
+    c0, c1, c2 = False, False, False
+    failed_info = []
+    sd = SatelliteData('amateur')
+    sat_import = sd.add_info
+    sat_options = []
+    # C0
+    print("\n\n ----- Satellite options check [C0] -----\n")
+    sleep(ts)
+    try:
+        for nfo in sat_import:
+            sat_options.append(f"Name: {nfo.get('Name')}, NORAD: {nfo.get('NORAD')}")
+        for opts in sat_options:
+            print(opts)
+        c0 += True
+        print("\n  Check passed.")
+    except Exception as e:
+        print("\n  Exception occured.")
+        print("  Check failed.")
+        failed_info.append({"C0": e})
+        c0 += False
+    ###
+    # C1
+    print("\n\n ----- GetSat check [C1] -----\n")
+    sleep(ts)
+    try:
+        _norad = 25544 # ISS (ZARYA)
+        _lat, _lon = 40.712, -74.006 # NYC
+        _min = 20.0 # Min. Elevation
+        print(f"NORAD: {_norad}\n  Lat: {_lat}  |  Lon: {_lon}\n  Min. Elevation: {_min}\n")
+        sat_data = GetSat(_norad, _lat, _lon, _min).data
+        c1 += True
+        print("\n  Check passed.")
+    except Exception as e:
+        print("\n  Exception occured.")
+        print("  Check failed.")
+        failed_info.append({"C1": e})
+        c1 += False
+    ###
+    # C2
+    print("\n\n ----- Info display check [C2] -----\n")
+    sleep(ts)
+    try:
+        _nnl = sat_data[0].get("Name"), sat_data[0].get("NORAD"), _lat, _lon
+        _ris = sat_data[1].get("Elev"), sat_data[1].get("Distance"), sat_data[1].get("When")
+        _clm = sat_data[2].get("Elev"), sat_data[2].get("Distance"), sat_data[2].get("When")
+        _set =  sat_data[3].get("Elev"), sat_data[3].get("Distance"), sat_data[3].get("When")
+        _nfo = sat_data[4].get("Uplink"), sat_data[4].get("Downlink"), sat_data[4].get("Mode")
+        _dis = disp_data(_nnl, _nfo, _ris, _clm, _set)
+        sleep(ts)
+        for line in _dis:
+            print(line)
+        c2 += True
+        print("\n  Check passed.")
+    except Exception as e:
+        print("\n  Exception occured.")
+        print("  Check failed.")
+        failed_info.append({"C2": e})
+        c2 += False
+    print("\n ----- Test Results -----")
+    sleep(0.1)
+    if c0: print("       C0: Passed")
+    else: print("       C0: Failed")
+    sleep(0.1)
+    if c1: print("       C1: Passed")
+    else: print("       C1: Failed")
+    sleep(0.1)
+    if c2: print("       C2: Passed")
+    else: print("       C2: Failed")
+    sleep(0.1)
+    if c0 and c1 and c2: print("\n  All checks passed.")
+    elif not c0 and not c1 and not c2:
+        print("\n  All checks failed:\n")
+        for error in failed_info:
+            print(f"    {error}")
+    else:
+        print("\n  One or more checks failed:\n")
+        for error in failed_info:
+            print(f"    {error}")
+    print("  Test complete.")
+    print("")
+    
+    
+    
 def start_gui(darkmode=True):
     """Main GUI function"""
     # Grabbing satellite info from data/satinfo.txt
