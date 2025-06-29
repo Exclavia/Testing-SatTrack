@@ -1,4 +1,5 @@
 # Satellite tracker - Testing repository.
+[![Main.py --test](https://github.com/Exclavia/Testing-SatTrack/actions/workflows/main-test.yml/badge.svg)](https://github.com/Exclavia/Testing-SatTrack/actions/workflows/main-test.yml)
 
 Simple satellite tracker with a GUI that shows the next pass for a selected satellite over a given longitude and latitude based on minimum elevation.
 
