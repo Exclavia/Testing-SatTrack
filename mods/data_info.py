@@ -7,9 +7,6 @@ try:
 except ImportError:
     from mods.path_to import data_dir
 
-def import_test ():
-    print("data_info.py imported succesfully.")
-
 
 class SatelliteData:
     """ Takes Celestrak satellite group and data directory path + Optional force download and max amount of days before downloading again."""
@@ -43,7 +40,6 @@ class SatelliteData:
                             sat_info.append(sat_dict)
             return sat_info
 
-
     # Downloads keps from Celestrak if file doesn't exist or current file is more than max_days old
     def getkeps(self):
         """get_keps(sat_group: str -> Satellite group,
@@ -59,6 +55,5 @@ class SatelliteData:
                 if self.force: print("Downloading...")
                 load.download(url, filename=file_path)
             return file_path
-
         print(f"{self.data_path} does not exist.")
         return None
