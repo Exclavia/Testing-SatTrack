@@ -1,9 +1,11 @@
-from csv import DictReader
 from time import time
 from datetime import datetime as dt
+from csv import DictReader
+
 from skyfield.api import wgs84, load, Timescale
 from skyfield.api import EarthSatellite as es
 from pytz import timezone as py_tz
+
 try:
     from data_info import SatelliteData
     from path_to import data_dir
@@ -11,9 +13,8 @@ except ImportError:
     from mods.data_info import SatelliteData
     from mods.path_to import data_dir
 
+
 _path = data_dir()
-def import_test ():
-    print("get_sat.py imported succesfully.")
 class GetSat:
     """Takes NORAD Number, Latitude, Longitude, Minimum elevation and data directory path, returns Satellite descripton info and rise, culmination and set data."""
     def __init__(self, norad:int, latitude:float, longitude:float, min_elevation:float):
@@ -27,12 +28,11 @@ class GetSat:
     def _24(self, epoch):
         return epoch + 86400.0
 
-    def dt2(self, ts:Timescale, dtime):
-        return ts.from_datetime(dtime)
+    def _ts(self, ts:Timescale, dt0, dt1):
+        return ts.from_datetime(dt0), ts.from_datetime(dt1)
 
-    def ts2(self, times, tzone):
-        return dt.fromtimestamp(times, tz=tzone)
-
+    def _dt(self, t0, t1, tzn):
+        return dt.fromtimestamp(t0, tz=tzn), dt.fromtimestamp(t1, tz=tzn)
     # Function loads local keps file, reads it, calculates, returns in list/dict
     def __getsat__(self):
         sd = SatelliteData('amateur')
@@ -45,9 +45,8 @@ class GetSat:
         tz = py_tz('America/Detroit')
         # Setting Timescale/Datetime/Timezone
         ts = load.timescale()
-        d0, d1 = self.ts2(time(), tz), self.ts2(self._24(time()), tz)
-        t0, t1 = self.dt2(ts, d0), self.dt2(ts, d1)
-        # Parsing Keps and returning easily callable data.
+        d0, d1 = self._dt(time(), self._24(time()), tz)
+        t0, t1 = self._ts(ts, d0, d1)
         earth_sats = [es.from_omm(ts, fields) for fields in data]
         by_number = {sat.model.satnum: sat for sat in earth_sats}
         main_sat = by_number[self.norad]

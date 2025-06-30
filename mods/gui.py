@@ -4,6 +4,7 @@ import tkinter as tk
 from tkinter import ttk, messagebox, BOTH, PhotoImage
 from tkinter.font import Font
 from ttkbootstrap import Style
+
 try:
     from get_sat import GetSat
     from data_info import SatelliteData
@@ -12,6 +13,7 @@ except ImportError:
     from mods.get_sat import GetSat
     from mods.data_info import SatelliteData
     from mods.display import disp_data
+
 
 def test_start ():
     ts = 0.5
@@ -97,9 +99,8 @@ def test_start ():
             print(f"    {error}")
     print("  Test complete.")
     print("")
-    
-    
-    
+
+
 def start_gui(darkmode=True):
     """Main GUI function"""
     # Grabbing satellite info from data/satinfo.txt
